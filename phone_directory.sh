@@ -30,22 +30,34 @@ printf "\n"
 startMyScript() {
 	printf "                   \e[1;90m     Welcome to my\e[0m\e[1;95m Phone Book\e[0m\e[1;90m Management System!    \e[0m\n"
 	printf "\n"
-	printf "\e[1;33m 1 - \e[33m Add a Contact\e[0m\n"
-	printf "\e[1;33m 2 - \e[33m Search For a Contact\e[0m\n"
-	printf "\e[1;33m 3 - \e[33m Delete a Contact\e[0m\n"
-	printf "\e[1;33m 4 - \e[33m Display the Phone Book\e[0m\n"
-	printf "\e[1;33m 5 - \e[33m Exit\e[0m\n"
-	read -p "Enter your choice: " user_choice
+	printf "\e[1;33m 1 - \e[0m\e[33m Add a Contact\e[0m\n"
+	printf "\e[1;33m 2 - \e[0m\e[33m Search For a Contact\e[0m\n"
+	printf "\e[1;33m 3 - \e[0m\e[33m Delete a Contact\e[0m\n"
+	printf "\e[1;33m 4 - \e[0m\e[33m Display the Phone Book\e[0m\n"
+	printf "\e[1;33m 5 - \e[0m\e[33m Exit\e[0m\n"
+	read -p $'\e[1;96m->\e[0m Enter your choice: ' user_choice
 	clear
 	
 	case $user_choice in
-	1);;
+	1)
+	printf "\e[1;96m                  Add NEW CONTACT \e[0m\n\n"
+	read -p $'\e[1;96m ->\e[0m Enter Name: ' contact_name
+	printf "\e[32m Got That! ✔\e[0m\n\n"
+	;;
 	2);;
 	3);;
 	4);;
-	5);;
-	*);;
+	5)
+	exit 1;
+	;;
+	*)
+	printf "\e[31m INVALID OPTION! ❌\e[0m\n"
+	;;
 	esac;
+	read -p $'\e[1;96m ->\e[0m Press 5 to exit, Press Enter OR Anything else to Return to Main Menu: ' is_exit
+	if [[ $is_exit -eq 5 ]];
+	then exit 1;
+	fi
 }
 
 clear
