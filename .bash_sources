@@ -1,0 +1,5 @@
+alias mongod="/c/Program\ Files/MongoDB/Server/4.2/bin/mongod.exe"
+
+alias mongo="/c/Program\ Files/MongoDB/Server/4.2/bin/mongo.exe"
+
+myDbUser = shXkODwOG5UkOJZO

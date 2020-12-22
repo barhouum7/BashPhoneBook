@@ -4,6 +4,7 @@
 # Github: https://github.com/barhouum7/BashPhoneBook
 
 
+trap 'printf "\n";stop;exit 1' 2
 
 banner() {
 
@@ -26,6 +27,36 @@ printf "\n"
 
 }
 
+
+connectMongo() {
+# # mongo --version
+# mongo --quiet <<EOF
+# show dbs;
+# use phoneBookDb;
+# EOF
+# mongo "mongodb+srv://cluster0.r1vmd.mongodb.net/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV
+# Initialize a mongo data folder and logfile
+
+mkdir -p /c/data/db/var/log
+touch /c/data/db/var/log/mongodb.log
+
+# Start mongodb with logging
+# --logpath    Without this mongod will output all log information to the standard output.
+# --logappend  Ensure mongod appends new entries to the end of the logfile. We create it first so that the below tail always finds something
+/c/Program\ Files/MongoDB/Server/4.2/bin/mongod  --quiet --logpath /c/data/db/var/log/mongodb.log --logappend &
+
+# Wait until mongo logs that it's ready (or timeout after 60s)
+COUNTER=0
+grep -q 'waiting for connections on port' /c/data/db/var/log/mongodb.log
+while [[ $? -ne 0 && $COUNTER -lt 60 ]] ; do
+    sleep 2
+    let COUNTER+=2
+    echo "Waiting for mongo to initialize... ($COUNTER seconds so far)"
+    grep -q 'waiting for connections on port' /c/data/db/var/log/mongodb.log
+done
+
+# Now we know mongo is ready and can continue with other commands
+}
 
 startMyScript() {
 	printf "                   \e[1;90m     Welcome to my\e[0m\e[1;95m Phone Book\e[0m\e[1;90m Management System!    \e[0m\n"
@@ -82,6 +113,7 @@ startMyScript() {
 }
 
 clear
+connectMongo
 while :
 do
 banner
