@@ -40,24 +40,45 @@ startMyScript() {
 	
 	case $user_choice in
 	1)
-	printf "\e[1;96m                  Add NEW CONTACT \e[0m\n\n"
-	read -p $'\e[1;96m ->\e[0m Enter Name: ' contact_name
-	printf "\e[32m Got That! ✔\e[0m\n\n"
+		printf "\e[1;96m                  Add NEW CONTACT \e[0m\n\n"
+		# first name, father's name, gender, phone number, email, and address
+		read -p $'\n\e[1;96m ->\e[0m Enter First Name: ' contact_firstName
+		read -p $'\n\e[1;96m ->\e[0m Enter Last Name: ' contact_lastName
+		read -p $'\n\e[1;96m ->\e[0m Enter Gender (M/F): ' contact_gender
+		read -p $'\n\e[1;96m ->\e[0m Enter Phone Number: ' contact_number
+		read -p $'\n\e[1;96m ->\e[0m Enter E-mail (example@example.com): ' contact_email
+		read -p $'\n\e[1;96m ->\e[0m Enter Address: ' contact_address
+		printf "\n\e[32m Got That! ✔\e[0m\n\n"
+		clear
+		printf "\e[1;96m                  NEW CONTACT INFO \e[0m\n"
+		printf "\n\e[1;90m ->\e[0m First Name: $contact_firstName"
+		printf "\n\e[1;90m ->\e[0m Last Name: $contact_lastName"
+		printf "\n\e[1;90m ->\e[0m Gender: $contact_gender"
+		printf "\n\e[1;90m ->\e[0m Phone Number: $contact_number"
+		printf "\n\e[1;90m ->\e[0m E-mail: $contact_email"
+		printf "\n\e[1;90m ->\e[0m Address: $contact_address"
+
 	;;
+	
 	2);;
+	
 	3);;
+	
 	4);;
+	
 	5)
-	exit 1;
+		exit 1;
 	;;
+
 	*)
-	printf "\e[31m INVALID OPTION! ❌\e[0m\n"
+		printf "\n\e[31m INVALID OPTION! ❌\e[0m\n"
 	;;
 	esac;
-	read -p $'\e[1;96m ->\e[0m Press 5 to exit, Press Enter OR Anything else to Return to Main Menu: ' is_exit
+	read -p $'\n\n\e[1;96m ->\e[0m Press 5 to exit, Press Enter OR Anything else to Return to Main Menu: ' is_exit
 	if [[ $is_exit -eq 5 ]];
 	then exit 1;
 	fi
+	clear
 }
 
 clear
