@@ -10,7 +10,7 @@ trap user_interrupt SIGTSTP
 
 user_interrupt(){
         printf "\e[0m\n"
-        printf "\n\e[0m\e[1;36m\t   Exiting... THANK YOU!\n"
+        printf "\n\e[0m\e[1;36m\t   Exiting... THANK YOU! (❁'◡'❁)\n"
         sleep 2
         printf "\e[0m\n"
         exit 1
