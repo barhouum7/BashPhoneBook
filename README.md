@@ -8,6 +8,6 @@ Personal information such as first name, father's name, gender, phone number, em
 
 Adding, inserting, modifying, and updating new records, searching for saved contacts, and deleting phone book records, these operations are the basic functions that form up the main menu of this phone book script (as shown in the menu screenshot below)
 
-<img src="https://i.imgur.com/13hlFCI.png" data-canonical-src="https://i.imgur.com/13hlFCI.png" width="700" height="400">
+<img src="https://i.imgur.com/q3yV5W6.png" data-canonical-src="https://i.imgur.com/q3yV5W6.png" width="700" height="400">
 
 Note: It will be with a friendly graphical interface as a final version.
