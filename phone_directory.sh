@@ -5,6 +5,37 @@
 
 
 trap 'printf "\n";stop;exit 1' 2
+trap user_interrupt SIGINT
+trap user_interrupt SIGTSTP
+
+user_interrupt(){
+        printf "\e[0m\n"
+        printf "\n\e[0m\e[1;36m\t   Exiting... THANK YOU!\n"
+        sleep 2
+        printf "\e[0m\n"
+        exit 1
+}
+
+
+stop() {
+
+checkmongo=$(ps aux | grep -o "mongo" | head -n1)
+if [[ $checkmongo == *'mongo'* ]]; then
+pkill -f -2 mongo > /dev/null 2>&1
+killall mongo > /dev/null 2>&1
+fi
+checkmongod=$(ps aux | grep -o "mongod" | head -n1)
+if [[ $checkmongod == *'mongod'* ]]; then
+pkill -f -2 mongod > /dev/null 2>&1
+killall mongod > /dev/null 2>&1
+fi
+checkmongosh=$(ps aux | grep -o "mongosh" | head -n1)
+if [[ $checkmongosh == *'mongosh'* ]]; then
+pkill -f -2 mongosh > /dev/null 2>&1
+killall mongosh > /dev/null 2>&1
+fi
+}
+
 
 banner() {
 
@@ -29,47 +60,36 @@ printf "\n"
 
 
 connectMongo() {
-# # mongo --version
-# mongo --quiet <<EOF
-# show dbs;
-# use phoneBookDb;
-# EOF
-# mongo "mongodb+srv://cluster0.r1vmd.mongodb.net/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV
-# Initialize a mongo data folder and logfile
+mongo --version
+mongo --quiet <<EOF
+show dbs;
+use phoneBookDb;
+EOF
+mongo "mongodb+srv://cluster0.r1vmd.mongodb.net/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV
 
-mkdir -p /c/data/db/var/log
-touch /c/data/db/var/log/mongodb.log
-
-# Start mongodb with logging
-# --logpath    Without this mongod will output all log information to the standard output.
-# --logappend  Ensure mongod appends new entries to the end of the logfile. We create it first so that the below tail always finds something
-/c/Program\ Files/MongoDB/Server/4.2/bin/mongod  --quiet --logpath /c/data/db/var/log/mongodb.log --logappend &
-
-# Wait until mongo logs that it's ready (or timeout after 60s)
-COUNTER=0
-grep -q 'waiting for connections on port' /c/data/db/var/log/mongodb.log
-while [[ $? -ne 0 && $COUNTER -lt 60 ]] ; do
-    sleep 2
-    let COUNTER+=2
-    echo "Waiting for mongo to initialize... ($COUNTER seconds so far)"
-    grep -q 'waiting for connections on port' /c/data/db/var/log/mongodb.log
-done
-
-# Now we know mongo is ready and can continue with other commands
 }
 
 startMyScript() {
 	printf "                   \e[1;90m     Welcome to my\e[0m\e[1;95m Phone Book\e[0m\e[1;90m Management System!    \e[0m\n"
 	printf "\n"
-	printf "\e[1;33m 1 - \e[0m\e[33m Add a Contact\e[0m\n"
-	printf "\e[1;33m 2 - \e[0m\e[33m Search For a Contact\e[0m\n"
-	printf "\e[1;33m 3 - \e[0m\e[33m Delete a Contact\e[0m\n"
-	printf "\e[1;33m 4 - \e[0m\e[33m Display the Phone Book\e[0m\n"
-	printf "\e[1;33m 5 - \e[0m\e[33m Exit\e[0m\n"
+	printf "\e[1;33m pkg - \e[0m\e[33m Install Packages\e[0m\n"
+	printf "\n\e[1;33m 1 - \e[0m\e[1;33m Add \e[0m\e[33ma Contact\e[0m\n"
+	printf "\e[1;33m 2 - \e[0m\e[1;33m Search \e[0m\e[33mFor a Contact\e[0m\n"
+	printf "\e[1;33m 3 - \e[0m\e[1;33m Delete \e[0m\e[33ma Contact\e[0m\n"
+	printf "\e[1;33m 4 - \e[0m\e[1;33m Display \e[0m\e[33mthe Phone Book\e[0m\n"
+	printf "\n\n\e[33m Press \e[0m\e[1;33m5 \e[0m\e[33mOR \e[0m\e[1;33mCTRL+C \e[0m\e[33mto Exit.\e[0m\n\n"
+	
 	read -p $'\e[1;96m->\e[0m Enter your choice: ' user_choice
 	clear
 	
 	case $user_choice in
+	pkg)
+		clear
+		chmod 777 install.sh
+		./install.sh
+		
+	;;
+	
 	1)
 		printf "\e[1;96m                  Add NEW CONTACT \e[0m\n\n"
 		# first name, father's name, gender, phone number, email, and address
@@ -98,8 +118,9 @@ startMyScript() {
 	4);;
 	
 	5)
-		exit 1;
+		user_interrupt
 	;;
+	
 
 	*)
 		printf "\n\e[31m INVALID OPTION! ❌\e[0m\n"
@@ -107,15 +128,15 @@ startMyScript() {
 	esac;
 	read -p $'\n\n\e[1;96m ->\e[0m Press 5 to exit, Press Enter OR Anything else to Return to Main Menu: ' is_exit
 	if [[ $is_exit -eq 5 ]];
-	then exit 1;
+	then user_interrupt
 	fi
 	clear
 }
 
 clear
-connectMongo
 while :
 do
 banner
 startMyScript
+# connectMongo
 done
