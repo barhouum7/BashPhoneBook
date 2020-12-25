@@ -66,7 +66,7 @@ show dbs;
 use phoneBookDb;
 EOF
 mongo "mongodb+srv://cluster0.r1vmd.mongodb.net/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV
-
+#trap '' SIGINT SIGTSTP && command -v mongo > /dev/null 2>&1 ||
 }
 
 startMyScript() {
@@ -87,6 +87,8 @@ startMyScript() {
 		clear
 		chmod 777 install.sh
 		./install.sh
+		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster, please wait...\n\e[0m"; apt-get update > /dev/null && connectMongo > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $! 
+		connectMongo
 		
 	;;
 	
@@ -138,5 +140,4 @@ while :
 do
 banner
 startMyScript
-# connectMongo
 done
