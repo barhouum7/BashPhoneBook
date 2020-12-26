@@ -94,6 +94,7 @@ startMyScript() {
 	
 	1)
 		printf "\e[1;96m                  Add NEW CONTACT \e[0m\n\n"
+		
 		# contactId, first name, father's name, gender, phone number, email, and address
 		while ! [[ -z "$result" ]] || ! [[ "$contact_ID" =~ ^[+-]?[0-9]+\.?[0-9]*$ ]] || [[ -z "$contact_ID" ]]
 		do
@@ -101,42 +102,36 @@ startMyScript() {
 		# Validate if any input field is left blank. If an input field is left blank, display appropriate message and stop execution of script
 		if [[ -z "$contact_ID" ]]; then
 			printf "\n\e[31m Inputs cannot be blank please try again!\e[0m\n"
-			# kill $!
-			sleep 1
 		else #..................................>>>>>|else
-		head -c 5 phoneBook.log > idField.txt
-		result=$(grep -nE $contact_ID idField.txt)
+		if [[ -e phoneBook.log ]]; then
+		findID=">"$contact_ID
+		result=$(grep -nE $findID phoneBook.log)
 		if ! [[ -z "$result" ]]; then
 			printf "\n\e[31m Contact ID is used! Enter another ID.\e[0m\n"
-			sleep 1
+		fi
+		else
+			read -p $'\n\e[1;96m ->\e[0m Enter Contact Id: ' contact_ID
 		fi
 		# Now Validate if the Contact ID is a number using regex (Integer). If not, display appropriate message and stop execution of the script
 		if ! [[ "$contact_ID" =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
 			printf "\n\e[31m Contact ID must be a number!\e[0m\n"
-			sleep 1
-		fi
-		# Validate if any input field is left blank. If an input field is left blank, display appropriate message and stop execution of script
-		if [[ -z "$contact_ID" ]]; then
-			printf "\n\e[31m Inputs cannot be blank please try again!\e[0m\n"
-			# kill $!
-			sleep 1			
 		fi
 		fi #..................................>>>>>|fi
-		# printf "\n\e[32m Working...\e[0m\n\n"
+		
 		done
+
+		############################# I will Add Validation for those inputs Later .......#####################################
 		read -p $'\n\e[1;96m ->\e[0m Enter First Name: ' contact_firstName
 		read -p $'\n\e[1;96m ->\e[0m Enter Last Name: ' contact_lastName
 		read -p $'\n\e[1;96m ->\e[0m Enter Gender (M/F): ' contact_gender
-		
-		
+		############################# I will Add Validation for those inputs Later .......#####################################
 		read -p $'\n\e[1;96m ->\e[0m Enter Phone Number: ' contact_number
 		read -p $'\n\e[1;96m ->\e[0m Enter E-mail (example@example.com): ' contact_email
-		
-		
+		############################# I will Add Validation for those inputs Later .......#####################################
 		read -p $'\n\e[1;96m ->\e[0m Enter Address: ' contact_address
 		printf "\n\e[32m Got That! ✔\e[0m\n\n"
 		clear
-		printf "\e[1;96m                  NEW CONTACT INFO \e[0m\n"
+		printf "\e[1;96m                  NEW CONTACT INFO: \e[0m\n"
 		printf "\n\e[1;90m ->\e[0m Contact ID: $contact_ID"
 		printf "\n\e[1;90m ->\e[0m First Name: $contact_firstName"
 		printf "\n\e[1;90m ->\e[0m Last Name: $contact_lastName"
@@ -144,11 +139,24 @@ startMyScript() {
 		printf "\n\e[1;90m ->\e[0m Phone Number: $contact_number"
 		printf "\n\e[1;90m ->\e[0m E-mail: $contact_email"
 		printf "\n\e[1;90m ->\e[0m Address: $contact_address"
-		echo "- $contact_ID : $contact_firstName : $contact_lastName : $contact_gender : $contact_number : $contact_email : $contact_address" >> phoneBook.log
+		echo "->$contact_ID : $contact_firstName : $contact_lastName : $contact_gender : $contact_number : $contact_email : $contact_address" >> phoneBook.log
 		printf "\n\t\e[1;32m - Contact has been saved successfully! ✔\e[0m\n\n"
+		sleep 1
+		exit 1
 	;;
 	
-	2);;
+	2)
+		printf "\e[1;96m                  SEARCH FOR CONTACT \e[0m\n\n"
+		read -p $'\n\e[1;96m ->\e[0m Enter Any Query for Contact to Search: ' search_query
+		clear
+		printf "\e[1;96m                  SEARCH RESULTS: \e[0m\n"
+		if [[ $search_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
+			searchQuery=">"$search_query
+			grep -i --color=always $searchQuery phoneBook.log
+		else
+			grep -i --color=always $search_query phoneBook.log
+		fi
+	;;
 	
 	3);;
 	
