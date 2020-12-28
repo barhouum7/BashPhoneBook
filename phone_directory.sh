@@ -73,11 +73,12 @@ startMyScript() {
 	printf "                   \e[1;90m     Welcome to my\e[0m\e[1;95m Phone Book\e[0m\e[1;90m Management System!    \e[0m\n"
 	printf "\n"
 	printf "\e[1;33m pkg - \e[0m\e[33m Install Packages\e[0m\n"
-	printf "\n\e[1;33m 1 - \e[0m\e[1;33m Add \e[0m\e[33ma Contact\e[0m\n"
-	printf "\e[1;33m 2 - \e[0m\e[1;33m Search \e[0m\e[33mFor a Contact\e[0m\n"
-	printf "\e[1;33m 3 - \e[0m\e[1;33m Delete \e[0m\e[33ma Contact\e[0m\n"
-	printf "\e[1;33m 4 - \e[0m\e[1;33m Display \e[0m\e[33mthe Phone Book\e[0m\n"
-	printf "\n\n\e[33m Press \e[0m\e[1;33m5 \e[0m\e[33mOR \e[0m\e[1;33mCTRL+C \e[0m\e[33mto Exit.\e[0m\n\n"
+	printf "\n\e[1;33m add - \e[0m\e[1;33m ADD \e[0m\e[33ma Contact\e[0m\n"
+	printf "\e[1;33m src - \e[0m\e[1;33m SEARCH \e[0m\e[33mFor a Contact\e[0m\n"
+	printf "\e[1;33m edt - \e[0m\e[1;33m EDIT \e[0m\e[33m a Contact Info\e[0m\n"
+	printf "\e[1;33m dlt - \e[0m\e[1;33m DELETE \e[0m\e[33ma Contact\e[0m\n"
+	printf "\e[1;33m dis - \e[0m\e[1;33m DISPLAY \e[0m\e[33mthe Phone Book\e[0m\n"
+	printf "\n\n\e[33m Press \e[0m\e[1;33mq \e[0m\e[33mOR \e[0m\e[1;33mCTRL+C \e[0m\e[33mto Exit.\e[0m\n\n"
 	
 	read -p $'\e[1;96m->\e[0m Enter your choice: ' user_choice
 	clear
@@ -92,7 +93,7 @@ startMyScript() {
 		
 	;;
 	
-	1)
+	add)
 		printf "\e[1;96m                  Add NEW CONTACT \e[0m\n\n"
 		
 		# contactId, first name, father's name, gender, phone number, email, and address
@@ -144,24 +145,52 @@ startMyScript() {
 		printf "\n\t\e[1;32m - Contact has been saved successfully! ✔\e[0m\n\n"
 	;;
 	
-	2)
+	src)
 		printf "\e[1;96m                  SEARCH FOR CONTACT \e[0m\n\n"
+		while true
+		do
 		read -p $'\n\e[1;96m ->\e[0m Enter Any Query for Contact to Search: ' search_query
 		clear
-		printf "\e[1;96m                  SEARCH RESULTS: \e[0m\n"
+		printf "\e[33mPress \e[0m\e[1;33mCTRL+C \e[0m\e[33mOR \e[0m\e[1;33mCTRL+Z \e[0m\e[33mto Exit.\e[0m\n\n"
+		printf "\e[1;96m                  SEARCH RESULTS: \e[0m\n\n"
+		if [[ -z "$search_query" ]]; then
+			printf "\n\e[31m Please enter contact's ID or any related info to SEARCH!\e[0m\n"
+		else
 		if [[ $search_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
 			searchQuery=">"$search_query
+			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -i $searchQuery phoneBook.log > /dev/null 2>&1;then
 			grep -i --color=always $searchQuery phoneBook.log
-		else
+			else
 			grep -i --color=always $search_query phoneBook.log
+			fi
+		else
+		if ! [[ $search_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
+			grep -i --color=always $search_query phoneBook.log
+		else
+			break
 		fi
+		fi
+		fi
+		done
 	;;
 	
-	3);;
+	edt);;
 	
-	4);;
+	dlt)
+		printf "\e[1;96m                  DELETE CONTACT \e[0m\n\n"
+		read -p $'\n\e[1;96m ->\e[0m Enter the contact`s ID or any related info to DELETE it: ' delete_query
+		clear
+		if [[ $delete_query =~ ^[+-]?[0-9]+ ]]; then
+			deleteQuery=">"$delete_query
+			grep -i --color=always $deleteQuery phoneBook.log
+		else
+			grep -i --color=always $delete_query phoneBook.log
+		fi
+	;;
+
+	dis);;
 	
-	5)
+	q)
 		user_interrupt
 	;;
 	
@@ -170,8 +199,8 @@ startMyScript() {
 		printf "\n\e[31m INVALID OPTION! ❌\e[0m\n"
 	;;
 	esac;
-	read -p $'\n\n\e[1;96m ->\e[0m Press 5 to exit, Press Enter OR Anything else to Return to Main Menu: ' is_exit
-	if [[ $is_exit -eq 5 ]];
+	read -p $'\n\n\e[1;96m ->\e[0m Press q to exit, Press Enter OR Anything else to Return to Main Menu: ' is_exit
+	if [[ $is_exit == "q" ]];
 	then user_interrupt
 	fi
 	clear
