@@ -11,7 +11,8 @@ trap user_interrupt SIGTSTP
 user_interrupt(){
         printf "\e[0m\n"
         printf "\n\e[0m\e[1;36m\t   Exiting... THANK YOU! (❁'◡'❁)\n"
-        sleep 2
+        sleep 1
+        # (for i in $(seq 0 10 100); do echo $i; sleep 1; done) | zenity --progress --title "Bye! THANK YOu!" -- auto-close
         printf "\e[0m\n"
         exit 1
 }
@@ -59,15 +60,10 @@ printf "\n"
 }
 
 
-connectMongo() {
-mongo --version
-mongo --quiet <<EOF
-show dbs;
-use phoneBookDb;
-EOF
-mongo "mongodb+srv://cluster0.r1vmd.mongodb.net/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV
-#trap '' SIGINT SIGTSTP && command -v mongo > /dev/null 2>&1 ||
+connectMongoCluster() {
+	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV < testMyDb.js
 }
+
 
 startMyScript() {
 	printf "                   \e[1;90m     Welcome to my\e[0m\e[1;95m Phone Book\e[0m\e[1;90m Management System!    \e[0m\n"
@@ -88,8 +84,9 @@ startMyScript() {
 		clear
 		chmod 777 install.sh
 		./install.sh
-		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster, please wait...\n\e[0m"; apt-get update > /dev/null && connectMongo > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $! 
-		connectMongo
+		chmod 777 testMyDb.js
+		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+		connectMongoCluster
 		
 	;;
 	
@@ -143,13 +140,14 @@ startMyScript() {
 		printf "\n\e[1;90m ->\e[0m Address: $contact_address"
 		echo "->$contact_ID : $contact_firstName : $contact_lastName : $contact_gender : $contact_number : $contact_email : $contact_address" >> phoneBook.log
 		printf "\n\t\e[1;32m - Contact has been saved successfully! ✔\e[0m\n\n"
+		lolcat phoneBook.log
 	;;
 	
 	src)
 		printf "\e[1;96m                  SEARCH FOR CONTACT \e[0m\n\n"
 		while true
 		do
-		read -p $'\n\e[1;96m ->\e[0m Enter Any Query for Contact to Search: ' search_query
+		read -p $'\n\e[1;96m ->\e[0m Enter any query for contact to search: ' search_query
 		clear
 		printf "\e[33mPress \e[0m\e[1;33mCTRL+C \e[0m\e[33mOR \e[0m\e[1;33mCTRL+Z \e[0m\e[33mto Exit.\e[0m\n\n"
 		printf "\e[1;96m                  SEARCH RESULTS: \e[0m\n\n"
@@ -159,12 +157,24 @@ startMyScript() {
 		if [[ $search_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
 			searchQuery=">"$search_query
 			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -i $searchQuery phoneBook.log > /dev/null 2>&1;then
+			check_query=`cat phoneBook.log | grep -ci $searchQuery`
+			#printf $check_query
+			
+			if [[ $check_query > 0 ]]; then printf "\e[32m The desired contact has been found! ✔\e[0m\n\n"; else printf "\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n"; fi
 			grep -i --color=always $searchQuery phoneBook.log
 			else
+			check_query=`cat phoneBook.log | grep -ci $search_query`
+			#printf $check_query
+			
+			if [[ $check_query > 0 ]]; then printf "\e[32m The desired contact has been found! ✔\e[0m\n\n"; else printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n"; fi
 			grep -i --color=always $search_query phoneBook.log
 			fi
 		else
 		if ! [[ $search_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
+			check_query=`cat phoneBook.log | grep -ci $search_query`
+			#printf $check_query
+			
+			if [[ $check_query > 0 ]]; then printf "\e[32m The desired contact has been found! ✔\e[0m\n\n"; else printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n"; fi
 			grep -i --color=always $search_query phoneBook.log
 		else
 			break
@@ -174,21 +184,18 @@ startMyScript() {
 		done
 	;;
 	
-	edt);;
+	edt)
+		
+	;;
 	
 	dlt)
-		printf "\e[1;96m                  DELETE CONTACT \e[0m\n\n"
-		read -p $'\n\e[1;96m ->\e[0m Enter the contact`s ID or any related info to DELETE it: ' delete_query
-		clear
-		if [[ $delete_query =~ ^[+-]?[0-9]+ ]]; then
-			deleteQuery=">"$delete_query
-			grep -i --color=always $deleteQuery phoneBook.log
-		else
-			grep -i --color=always $delete_query phoneBook.log
-		fi
+		
 	;;
-
-	dis);;
+	
+	dis)
+		printf "\e[1;96m                  YOUR PHONE BOOK \e[0m\n\n"
+		lolcat phoneBook.log
+	;;
 	
 	q)
 		user_interrupt
