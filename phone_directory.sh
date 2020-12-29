@@ -227,7 +227,50 @@ startMyScript() {
 	;;
 	
 	dlt)
+		printf "\e[1;96m                  DELETE CONTACT \e[0m\n\n"
+		while true
+		do
+		read -p $'\n\e[1;96m ->\e[0m Enter the contact`s ID or any related info to DELETE it (Case-sensitive): ' delete_query
+		clear
+		printf "\e[33mPress \e[0m\e[1;33mCTRL+C \e[0m\e[33mOR \e[0m\e[1;33mCTRL+Z \e[0m\e[33mto Exit.\e[0m\n\n"
 		
+		if [[ -z "$delete_query" ]]; then
+			printf "\n\e[31m Please enter contact's ID or any related info to DELETE!\e[0m\n"
+		else
+		if [[ $delete_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
+			deleteQuery=">"$delete_query
+			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -i $deleteQuery phoneBook.log > /dev/null 2>&1;then
+			sed -i -e "/$deleteQuery/d" phoneBook.log
+			printf "\n\e[32m DELETED Successfully! ✔\e[0m\n\n"
+			sleep 2
+			# clear
+			printf "\t\e[1;96m                  PHONE BOOK NOW: \e[0m\n"
+			lolcat phoneBook.log
+			else
+			sed -i -e "/$delete_query/d" phoneBook.log
+			printf "\n\e[32m DELETED Successfully! ✔\e[0m\n\n"
+			sleep 2
+			# clear
+			printf "\t\e[1;96m                  PHONE BOOK NOW: \e[0m\n"
+			lolcat phoneBook.log
+			fi
+		else
+		if ! [[ $delete_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
+			check_query=`cat phoneBook.log | grep -c $delete_query`
+			printf $check_query
+			
+			if [[ $check_query > 0 ]]; then printf "\e[32m DELETED Successfully! ✔\e[0m\n\n"; else printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n"; fi
+			sed -i -e "/$delete_query/d" phoneBook.log # huuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuraaaay :((
+			sleep 2
+			# clear
+			printf "\t\e[1;96m                  PHONE BOOK NOW: \e[0m\n"
+			lolcat phoneBook.log
+		else
+			break
+		fi
+		fi
+		fi
+		done
 	;;
 	
 	dis)
