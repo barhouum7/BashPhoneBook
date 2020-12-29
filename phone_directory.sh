@@ -185,7 +185,45 @@ startMyScript() {
 	;;
 	
 	edt)
-		
+				printf "\e[1;96m                  	EDIT CONTACT INFO \e[0m\n\n"
+		while true
+		do
+		printf "\e[33mPress \e[0m\e[1;33mCTRL+C \e[0m\e[33mOR \e[0m\e[1;33mCTRL+Z \e[0m\e[33mto Exit.\e[0m\n\n"
+		printf "\e[1;96mYOUR PHONE BOOK: \e[0m\n\n"
+		lolcat phoneBook.log
+		read -p $'\n\e[1;96m ->\e[0m Enter ID of the contact: ' getContactId
+		read -p $'\n\e[1;96m ->\e[0m Enter what do you want to change in this contact info: ' old_pattern
+		read -p $'\n\e[1;96m ->\e[0m Enter the new info: ' new_pattern
+
+
+		if [[ -z "$getContactId" || -z "$old_pattern" || -z "$new_pattern" ]]; then
+			printf "\n\e[31m Please, enter contact's ID to EDIT!\e[0m\n"
+			printf "\n\e[31m These fields are required to EDIT!\e[0m\n\n"
+			sleep 2
+			clear
+		else
+		if [[ $getContactId =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
+			searchForId=">"$getContactId
+			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -i $searchForId phoneBook.log > /dev/null 2>&1;then
+			check_query=`cat phoneBook.log | grep -ci $searchForId`
+			if [[ $check_query > 0 ]]; then printf "\n\e[32m The desired contact has been found! ✔\e[0m\n\n"; else printf "\n\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n"; fi
+			sleep 2
+			
+			lineNumber=`grep -nc $searchForId phoneBook.log` # Also I can use this command for this purpose: awk '/$searchForId/{print NR}' phoneBook.log
+			#printf $lineNumber
+			printf "\n\n"
+			sed -i phoneBook.log -e "$lineNumber s/$old_pattern/$new_pattern/"
+
+			fi
+		else
+		if ! [[ $getContactId =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
+			printf "\n\e[31m Contact ID must be a number!\e[0m\n"
+		else
+			break
+		fi
+		fi
+		fi
+		done
 	;;
 	
 	dlt)
