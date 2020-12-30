@@ -65,33 +65,10 @@ connectMongoCluster() {
 }
 
 
-startMyScript() {
-	printf "                   \e[1;90m     Welcome to my\e[0m\e[1;95m Phone Book\e[0m\e[1;90m Management System!    \e[0m\n" | pv -qL 50
-	printf "\n"
-	printf "\e[1;33m pkg - \e[0m\e[33m Install Packages\e[0m\n" | pv -qL 50
-	printf "\n\e[1;33m add - \e[0m\e[1;33m ADD \e[0m\e[33ma Contact\e[0m\n" | pv -qL 50
-	printf "\e[1;33m src - \e[0m\e[1;33m SEARCH \e[0m\e[33mFor a Contact\e[0m\n" | pv -qL 50
-	printf "\e[1;33m edt - \e[0m\e[1;33m EDIT \e[0m\e[33m a Contact Info\e[0m\n" | pv -qL 50
-	printf "\e[1;33m dlt - \e[0m\e[1;33m DELETE \e[0m\e[33ma Contact\e[0m\n" | pv -qL 50
-	printf "\e[1;33m dis - \e[0m\e[1;33m DISPLAY \e[0m\e[33mthe Phone Book\e[0m\n" | pv -qL 50
-	printf "\n\n\e[33m Press \e[0m\e[1;33mq \e[0m\e[33mOR \e[0m\e[1;33mCTRL+C \e[0m\e[33mto Exit.\e[0m\n\n" | pv -qL 50
-	
-	read -p $'\e[1;96m->\e[0m Enter your choice: ' user_choice
-	clear
-	
-	case $user_choice in
-	pkg)
-		clear
-		chmod 777 install.sh
-		./install.sh
-		chmod 777 testMyDb.js
-		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-		connectMongoCluster
-		
-	;;
-	
-	add)
-		printf "\e[1;96m                  Add NEW CONTACT \e[0m\n\n"
+
+addContact() {
+
+			printf "\e[1;96m                  Add NEW CONTACT \e[0m\n\n"
 		
 		# contactId, first name, father's name, gender, phone number, email, and address
 		while true
@@ -140,11 +117,14 @@ startMyScript() {
 		printf "\n\e[1;90m ->\e[0m Address: $contact_address"
 		echo "->$contact_ID : $contact_firstName : $contact_lastName : $contact_gender : $contact_number : $contact_email : $contact_address" >> phoneBook.log
 		printf "\n\t\e[1;32m - Contact has been saved successfully! ✔\e[0m\n\n"
-		lolcat phoneBook.log		
-	;;
-	
-	src)
-		printf "\e[1;96m                  SEARCH FOR CONTACT \e[0m\n\n"
+		lolcat phoneBook.log
+
+}
+
+
+
+searchForContact() {
+			printf "\e[1;96m                  SEARCH FOR CONTACT \e[0m\n\n"
 		while true
 		do
 		read -p $'\n\e[1;96m ->\e[0m Enter any query for contact to search: ' search_query
@@ -182,9 +162,11 @@ startMyScript() {
 		fi
 		fi
 		done
-	;;
-	
-	edt)
+}
+
+
+
+editContact() {
 				printf "\e[1;96m                  	EDIT CONTACT INFO \e[0m\n\n"
 		while true
 		do
@@ -224,10 +206,10 @@ startMyScript() {
 		fi
 		fi
 		done
-	;;
-	
-	dlt)
-		printf "\e[1;96m                  DELETE CONTACT \e[0m\n\n"
+}
+
+deleteContact() {
+			printf "\e[1;96m                  DELETE CONTACT \e[0m\n\n"
 		while true
 		do
 		read -p $'\n\e[1;96m ->\e[0m Enter the contact`s ID or any related info to DELETE it (Case-sensitive): ' delete_query
@@ -271,11 +253,57 @@ startMyScript() {
 		fi
 		fi
 		done
+
+}
+
+listContacts() {
+		printf "\e[1;96m                  YOUR PHONE BOOK \e[0m\n\n"
+		lolcat phoneBook.log
+}
+
+startMyScript() {
+	printf "                   \e[1;90m     Welcome to my\e[0m\e[1;95m Phone Book\e[0m\e[1;90m Management System!    \e[0m\n" | pv -qL 50
+	printf "\n"
+	printf "\e[1;33m pkg - \e[0m\e[33m Install Packages\e[0m\n" | pv -qL 50
+	printf "\n\e[1;33m add - \e[0m\e[1;33m ADD \e[0m\e[33ma Contact\e[0m\n" | pv -qL 50
+	printf "\e[1;33m src - \e[0m\e[1;33m SEARCH \e[0m\e[33mFor a Contact\e[0m\n" | pv -qL 50
+	printf "\e[1;33m edt - \e[0m\e[1;33m EDIT \e[0m\e[33m a Contact Info\e[0m\n" | pv -qL 50
+	printf "\e[1;33m dlt - \e[0m\e[1;33m DELETE \e[0m\e[33ma Contact\e[0m\n" | pv -qL 50
+	printf "\e[1;33m dis - \e[0m\e[1;33m DISPLAY \e[0m\e[33mthe Phone Book\e[0m\n" | pv -qL 50
+	printf "\n\n\e[33m Press \e[0m\e[1;33mq \e[0m\e[33mOR \e[0m\e[1;33mCTRL+C \e[0m\e[33mto Exit.\e[0m\n\n" | pv -qL 50
+	
+	read -p $'\e[1;96m->\e[0m Enter your choice: ' user_choice
+	clear
+	
+	case $user_choice in
+	pkg)
+		clear
+		chmod 777 install.sh
+		./install.sh
+		chmod 777 testMyDb.js
+		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+		connectMongoCluster
+		
+	;;
+	
+	add)
+		addContact
+	;;
+	
+	src)
+		searchForContact
+	;;
+	
+	edt)
+		editContact
+	;;
+	
+	dlt)
+		deleteContact
 	;;
 	
 	dis)
-		printf "\e[1;96m                  YOUR PHONE BOOK \e[0m\n\n"
-		lolcat phoneBook.log
+		listContacts
 	;;
 	
 	q)
