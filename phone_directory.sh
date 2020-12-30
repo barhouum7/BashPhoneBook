@@ -40,21 +40,21 @@ fi
 
 banner() {
 
-printf "\n"
-printf "\n"
-printf "\n"
-printf "\e[1;90m     ____   __  __ __   ___  ____  _____    ____  __                  __     _            \e[0m\n"
-printf "\e[1;91m    / __ ) / / / //  |_/  / / __ )/ ___/   /  _/ / /_   _____ ____,_ / /_   (_)________  \e[0m\n"
-printf "\e[1;92m   / __ | / /_/ // / |_/ / / __  |\__ \    / /  / __ \ / ___// __  // __ \ / // __  __ \ \e[0m\n"
-printf "\e[1;94m  / /_/ // __  // /  /  / / /_/ /___/ /  _/ /  / /_/ // /   / /_/ // / / // // / / / / / \e[0m\n"
-printf "\e[1;90m /_____//_/ /_//_/  /__/ /_____//____/  /___/ /_.___//_/    \__,_//_/ /_//_//_/ /_/ /_/  \e[0m\n"
-printf "\e[1;90m                                                                                              v1.0\e[0m\n"
-printf "\n"
-printf "\e[1;93m              .:.:.\e[0m\e[1;77m The\e[0m\e[1;95m BashPhoneBook\e[0m\e[1;77m Script coded by:\e[0m\e[1;95m GitHub@barhouum7 \e[0m\e[1;93m.:.:.\e[0m\n"
-printf "\n"
-printf "      \e[101m\e[1;77m::                                                                          ::\e[0m\n"
-printf "      \e[101m\e[1;77m::          Bash implementation of a Phone Book Management System           ::\e[0m\n"
-printf "      \e[101m\e[1;77m::                                                                          ::\e[0m\n"
+printf "\n" | pv -qL 100
+printf "\n" | pv -qL 100
+printf "\n" | pv -qL 100
+printf "\e[1;90m     ____   __  __ __   ___  ____  _____    ____  __                  __     _            \e[0m\n" | pv -qL 100
+printf "\e[1;91m    / __ ) / / / //  |_/  / / __ )/ ___/   /  _/ / /_   _____ ____,_ / /_   (_)________  \e[0m\n" | pv -qL 100
+printf "\e[1;92m   / __ | / /_/ // / |_/ / / __  |\__ \    / /  / __ \ / ___// __  // __ \ / // __  __ \ \e[0m\n" | pv -qL 100
+printf "\e[1;94m  / /_/ // __  // /  /  / / /_/ /___/ /  _/ /  / /_/ // /   / /_/ // / / // // / / / / / \e[0m\n" | pv -qL 100
+printf "\e[1;90m /_____//_/ /_//_/  /__/ /_____//____/  /___/ /_.___//_/    \__,_//_/ /_//_//_/ /_/ /_/  \e[0m\n" | pv -qL 100
+printf "\e[1;90m                                                                                              v1.0\e[0m\n" | pv -qL 500
+printf "\n" | pv -qL 50
+printf "\e[1;93m              .:.:.\e[0m\e[1;77m The\e[0m\e[1;95m BashPhoneBook\e[0m\e[1;77m Script coded by:\e[0m\e[1;95m GitHub@barhouum7 \e[0m\e[1;93m.:.:.\e[0m\n" | pv -qL 50
+printf "\n" | pv -qL 50
+printf "      \e[101m\e[1;77m::                                                                          ::\e[0m\n" | pv -qL 50
+printf "      \e[101m\e[1;77m::          Bash implementation of a Phone Book Management System           ::\e[0m\n" | pv -qL 50
+printf "      \e[101m\e[1;77m::                                                                          ::\e[0m\n" | pv -qL 50
 printf "\n"
 
 }
@@ -66,15 +66,15 @@ connectMongoCluster() {
 
 
 startMyScript() {
-	printf "                   \e[1;90m     Welcome to my\e[0m\e[1;95m Phone Book\e[0m\e[1;90m Management System!    \e[0m\n"
+	printf "                   \e[1;90m     Welcome to my\e[0m\e[1;95m Phone Book\e[0m\e[1;90m Management System!    \e[0m\n" | pv -qL 50
 	printf "\n"
-	printf "\e[1;33m pkg - \e[0m\e[33m Install Packages\e[0m\n"
-	printf "\n\e[1;33m add - \e[0m\e[1;33m ADD \e[0m\e[33ma Contact\e[0m\n"
-	printf "\e[1;33m src - \e[0m\e[1;33m SEARCH \e[0m\e[33mFor a Contact\e[0m\n"
-	printf "\e[1;33m edt - \e[0m\e[1;33m EDIT \e[0m\e[33m a Contact Info\e[0m\n"
-	printf "\e[1;33m dlt - \e[0m\e[1;33m DELETE \e[0m\e[33ma Contact\e[0m\n"
-	printf "\e[1;33m dis - \e[0m\e[1;33m DISPLAY \e[0m\e[33mthe Phone Book\e[0m\n"
-	printf "\n\n\e[33m Press \e[0m\e[1;33mq \e[0m\e[33mOR \e[0m\e[1;33mCTRL+C \e[0m\e[33mto Exit.\e[0m\n\n"
+	printf "\e[1;33m pkg - \e[0m\e[33m Install Packages\e[0m\n" | pv -qL 50
+	printf "\n\e[1;33m add - \e[0m\e[1;33m ADD \e[0m\e[33ma Contact\e[0m\n" | pv -qL 50
+	printf "\e[1;33m src - \e[0m\e[1;33m SEARCH \e[0m\e[33mFor a Contact\e[0m\n" | pv -qL 50
+	printf "\e[1;33m edt - \e[0m\e[1;33m EDIT \e[0m\e[33m a Contact Info\e[0m\n" | pv -qL 50
+	printf "\e[1;33m dlt - \e[0m\e[1;33m DELETE \e[0m\e[33ma Contact\e[0m\n" | pv -qL 50
+	printf "\e[1;33m dis - \e[0m\e[1;33m DISPLAY \e[0m\e[33mthe Phone Book\e[0m\n" | pv -qL 50
+	printf "\n\n\e[33m Press \e[0m\e[1;33mq \e[0m\e[33mOR \e[0m\e[1;33mCTRL+C \e[0m\e[33mto Exit.\e[0m\n\n" | pv -qL 50
 	
 	read -p $'\e[1;96m->\e[0m Enter your choice: ' user_choice
 	clear
@@ -140,7 +140,7 @@ startMyScript() {
 		printf "\n\e[1;90m ->\e[0m Address: $contact_address"
 		echo "->$contact_ID : $contact_firstName : $contact_lastName : $contact_gender : $contact_number : $contact_email : $contact_address" >> phoneBook.log
 		printf "\n\t\e[1;32m - Contact has been saved successfully! ✔\e[0m\n\n"
-		lolcat phoneBook.log
+		lolcat phoneBook.log		
 	;;
 	
 	src)
