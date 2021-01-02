@@ -37,7 +37,6 @@ killall mongosh > /dev/null 2>&1
 fi
 }
 
-
 banner() {
 
 printf "\n" | pv -qL 1000
@@ -61,7 +60,7 @@ printf "\n"
 
 
 connectMongoCluster() {
-	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV < dbScript.js
+	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "var document = { firstName: '$contact_firstName', lastName: '$contact_lastName', gender: '$contact_gender', phoneNumber: '$contact_number', email: '$contact_email', address: '$contact_address' }; db.contacts.insertOne(document);"
 }
 
 
@@ -89,7 +88,7 @@ addContact() {
 			printf "\n\e[31m Contact ID must be a number!\e[0m\n"
 		else #..................................>>>>>|else
 			# echo "Contact ID validated successfully.." Debugging...
-         	break
+        break
 		fi #..................................>>>>>|fi
 		fi #..................................>>>>>|fi
 		fi #..................................>>>>>|fi
@@ -280,14 +279,13 @@ startMyScript() {
 		clear
 		chmod 777 install.sh
 		./install.sh
-		chmod 777 dbScript.js
-		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-		connectMongoCluster
 		
 	;;
 	
 	add)
 		addContact
+		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+		connectMongoCluster
 	;;
 	
 	src)
@@ -304,6 +302,7 @@ startMyScript() {
 	
 	dis)
 		listContacts
+		# echo "->$contact_ID : $contact_firstName : $contact_lastName : $contact_gender : $contact_number : $contact_email : $contact_address"
 	;;
 	
 	q)
