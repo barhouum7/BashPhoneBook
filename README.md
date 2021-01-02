@@ -11,6 +11,6 @@ Adding, inserting, modifying, and updating new records, searching for saved cont
 
 <b>Watch the demo:</b>
 
-[![Watch the demo](https://i.imgur.com/fFggSJU.png)](https://i.imgur.com/OPrnXuu.mp4)
+[![Watch the demo](https://i.imgur.com/fFggSJU.png)](https://youtu.be/v4kmgBx_E70?list=PLAAFm97yITReOxGUdXhH4HC4WZx2zB7Xr)
 
 Note: It will be with a friendly graphical interface as a final version.
