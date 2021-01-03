@@ -60,10 +60,25 @@ printf "\n"
 
 
 addContactDocument() {
-	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "var document = { firstName: '$contact_firstName', lastName: '$contact_lastName', gender: '$contact_gender', phoneNumber: '$contact_number', email: '$contact_email', address: '$contact_address' }; db.contacts.insertOne(document);"
+	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "var document = { contact_ID: '$contact_ID', firstName: '$contact_firstName', lastName: '$contact_lastName', gender: '$contact_gender', phoneNumber: '$contact_number', email: '$contact_email', address: '$contact_address' }; db.contacts.insertOne(document);"
 }
 
+searchContactDocument() {
+	#mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "db.contacts.findOne({ $or: [{ contact_ID: $search_query }, {firstName: '$search_query'}, {lastName: '$search_query'}, {gender: '$search_query' }, {phoneNumber: $search_query }, {email: '$search_query' }, {address: '$search_query' }]}).pretty()"
+	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "db.contacts.findOne({ contact_ID: $search_query )"
+}
 
+updateContactDocument() {
+	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "db.contacts.update({contact_ID: $getContactId},{'$set':{'$old_pattern':'$new_pattern'}})"
+}
+
+deleteContactDocument() {
+	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval ""
+}
+
+listContactDocument() {
+	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval ""
+}
 
 addContact() {
 
@@ -139,22 +154,45 @@ searchForContact() {
 			check_query=`cat phoneBook.log | grep -ci $searchQuery`
 			#printf $check_query
 			
-			if [[ $check_query > 0 ]]; then printf "\e[32m The desired contact has been found! ✔\e[0m\n\n"; else printf "\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n"; fi
+			if [[ $check_query > 0 ]]; then 
+			printf "\e[32m The desired contact has been found! ✔\e[0m\n\n";
 			grep -i --color=always $searchQuery phoneBook.log
+			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+			# SEARCHING to a document in my contacts collection..
+			searchContactDocument
+			else
+			printf "\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n";
+			fi
 			else
 			check_query=`cat phoneBook.log | grep -ci $search_query`
 			#printf $check_query
 			
-			if [[ $check_query > 0 ]]; then printf "\e[32m The desired contact has been found! ✔\e[0m\n\n"; else printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n"; fi
+			if [[ $check_query > 0 ]]; then 
+			printf "\e[32m The desired contact has been found! ✔\e[0m\n\n";
 			grep -i --color=always $search_query phoneBook.log
+
+			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+			# SEARCHING to a document in my contacts collection..
+			searchContactDocument
+			else
+			printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n";
+			fi
+			
 			fi
 		else
 		if ! [[ $search_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
 			check_query=`cat phoneBook.log | grep -ci $search_query`
 			#printf $check_query
 			
-			if [[ $check_query > 0 ]]; then printf "\e[32m The desired contact has been found! ✔\e[0m\n\n"; else printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n"; fi
+			if [[ $check_query > 0 ]]; then 
+			printf "\e[32m The desired contact has been found! ✔\e[0m\n\n";
 			grep -i --color=always $search_query phoneBook.log
+			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+			# SEARCHING to a document in my contacts collection..
+			searchContactDocument
+			else
+			printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n";
+			fi
 		else
 			break
 		fi
@@ -187,18 +225,26 @@ editContact() {
 			searchForId=">"$getContactId
 			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -i $searchForId phoneBook.log > /dev/null 2>&1;then
 			check_query=`cat phoneBook.log | grep -ci $searchForId`
-			if [[ $check_query > 0 ]]; then printf "\n\e[32m The desired contact has been found! ✔\e[0m\n\n"; else printf "\n\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n"; fi
+			if [[ $check_query > 0 ]]; then
+			printf "\n\e[32m The desired contact has been found! ✔\e[0m\n\n";
 			sleep 2
 			
 			lineNumber=`grep -nc $searchForId phoneBook.log` # Also I can use this command for this purpose: awk '/$searchForId/{print NR}' phoneBook.log
 			#printf $lineNumber
 			printf "\n\n"
 			sed -i phoneBook.log -e "$lineNumber s/$old_pattern/$new_pattern/"
-
+			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to UPDATE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+			# UPDATE a document in my contacts collection..
+			updateContactDocument
+			else
+			printf "\n\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n";
+			fi
 			fi
 		else
 		if ! [[ $getContactId =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
-			printf "\n\e[31m Contact ID must be a number!\e[0m\n"
+			clear
+			printf "\n\e[31m Contact ID must be a number!\e[0m\n\n"
+			sleep 2
 		else
 			break
 		fi
@@ -291,16 +337,10 @@ startMyScript() {
 	
 	src)
 		searchForContact
-		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-		# SEARCHING to a document in my contacts collection..
-		searchContactDocument
 	;;
 	
 	edt)
 		editContact
-		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to UPDATE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-		# UPDATE a document in my contacts collection..
-		updateContactDocument
 	;;
 	
 	dlt)
