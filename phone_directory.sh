@@ -60,24 +60,24 @@ printf "\n"
 
 
 addContactDocument() {
-	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "var document = { contact_ID: '$contact_ID', firstName: '$contact_firstName', lastName: '$contact_lastName', gender: '$contact_gender', phoneNumber: '$contact_number', email: '$contact_email', address: '$contact_address' }; db.contacts.insertOne(document);"
+	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "var document = { contact_ID: '$contact_ID', firstName: '$contact_firstName', lastName: '$contact_lastName', gender: '$contact_gender', phoneNumber: '$contact_number', email: '$contact_email', address: '$contact_address' }; db.contacts.insertOne(document); print('\n\n\t\t--->> YOUR CONTACTS COLLECTION NOW:\n\n'); db.contacts.find().pretty()"
 }
 
 searchContactDocument() {
-	#mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "db.contacts.findOne({ $or: [{ contact_ID: $search_query }, {firstName: '$search_query'}, {lastName: '$search_query'}, {gender: '$search_query' }, {phoneNumber: $search_query }, {email: '$search_query' }, {address: '$search_query' }]}).pretty()"
-	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "db.contacts.findOne({ contact_ID: $search_query )"
+	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "db.contacts.findOne({ \$or: [{ contact_ID: '$search_query' }, {firstName: '$search_query'}, {lastName: '$search_query'}, {gender: '$search_query' }, {phoneNumber: '$search_query' }, {email: '$search_query' }, {address: '$search_query' }]})"
+	#mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "db.contacts.findOne({ contact_ID: '$search_query'})"
 }
 
 updateContactDocument() {
-	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "db.contacts.update({contact_ID: $getContactId},{'$set':{'$old_pattern':'$new_pattern'}})"
+	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "db.contacts.findOneAndUpdate({contact_ID: '$getContactId'},{ \$set: { '$old_pattern_title': '$new_pattern'}}); print('\n\n\t\t--->> CONTACT INFO AFTER THIS CHANGE:\n\n'); db.contacts.findOne({contact_ID: '$getContactId'})"
 }
 
 deleteContactDocument() {
-	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval ""
+	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "db.contacts.remove({ \$or: [{ contact_ID: '$delete_query' }, {firstName: '$delete_query'}, {lastName: '$delete_query'}, {gender: '$delete_query' }, {phoneNumber: '$delete_query' }, {email: '$delete_query' }, {address: '$delete_query' }] }); print('\n\n\t\t--->> YOUR CONTACTS COLLECTION AFTER DELETE ONE DOCUMENT:\n\n'); db.contacts.find().pretty()"
 }
 
 listContactDocument() {
-	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval ""
+	mongo "mongodb+srv://cluster0.r1vmd.mongodb.net:27017/phoneBookDb" --username myDbAdmin --password 5XCOpPTPOulWGrHV --eval "print('\n\n\t\t--->> YOUR PHONE BOOK FROM THE DATABASE:\n\n'); db.contacts.find().pretty()"
 }
 
 addContact() {
@@ -208,14 +208,15 @@ editContact() {
 		while true
 		do
 		printf "\e[33mPress \e[0m\e[1;33mCTRL+C \e[0m\e[33mOR \e[0m\e[1;33mCTRL+Z \e[0m\e[33mto Exit.\e[0m\n\n"
-		printf "\e[1;96mYOUR PHONE BOOK: \e[0m\n\n"
+		printf "\n\n\e[1;96mYOUR PHONE BOOK: \e[0m\n\n"
 		lolcat phoneBook.log
 		read -p $'\n\e[1;96m ->\e[0m Enter ID of the contact: ' getContactId
-		read -p $'\n\e[1;96m ->\e[0m Enter what do you want to change in this contact info: ' old_pattern
+		read -p $'\n\e[1;96m ->\e[0m Enter the exact name of the field that you to change it [contact_ID, firstName, lastName, gender, phoneNumber, email, address]: ' old_pattern_title
+		read -p $'\n\e[1;96m ->\e[0m Enter the exact value that you want to change in this contact info: ' old_pattern
 		read -p $'\n\e[1;96m ->\e[0m Enter the new info: ' new_pattern
 
 
-		if [[ -z "$getContactId" || -z "$old_pattern" || -z "$new_pattern" ]]; then
+		if [[ -z "$getContactId" || -z "$old_pattern_title" || -z "$old_pattern" || -z "$new_pattern" ]]; then
 			printf "\n\e[31m Please, enter contact's ID to EDIT!\e[0m\n"
 			printf "\n\e[31m These fields are required to EDIT!\e[0m\n\n"
 			sleep 2
@@ -257,6 +258,8 @@ deleteContact() {
 			printf "\e[1;96m                  DELETE CONTACT \e[0m\n\n"
 		while true
 		do
+		printf "\n\n\t\e[1;96m                  PHONE BOOK NOW: \e[0m\n"
+		lolcat phoneBook.log
 		read -p $'\n\e[1;96m ->\e[0m Enter the contact`s ID or any related info to DELETE it (Case-sensitive): ' delete_query
 		clear
 		printf "\e[33mPress \e[0m\e[1;33mCTRL+C \e[0m\e[33mOR \e[0m\e[1;33mCTRL+Z \e[0m\e[33mto Exit.\e[0m\n\n"
@@ -268,30 +271,35 @@ deleteContact() {
 			deleteQuery=">"$delete_query
 			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -i $deleteQuery phoneBook.log > /dev/null 2>&1;then
 			sed -i -e "/$deleteQuery/d" phoneBook.log
-			printf "\n\e[32m DELETED Successfully! ✔\e[0m\n\n"
+			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to DELETE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+			# DELETE a document in my contacts collection..
+			deleteContactDocument
+			printf "\n\n\t\t\e[32m DELETED Successfully! ✔\e[0m\n\n"
 			sleep 2
-			# clear
-			printf "\t\e[1;96m                  PHONE BOOK NOW: \e[0m\n"
-			lolcat phoneBook.log
 			else
 			sed -i -e "/$delete_query/d" phoneBook.log
-			printf "\n\e[32m DELETED Successfully! ✔\e[0m\n\n"
+			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to DELETE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+			# DELETE a document in my contacts collection..
+			deleteContactDocument
+			printf "\n\n\t\t\e[32m DELETED Successfully! ✔\e[0m\n\n"
 			sleep 2
-			# clear
-			printf "\t\e[1;96m                  PHONE BOOK NOW: \e[0m\n"
-			lolcat phoneBook.log
 			fi
 		else
 		if ! [[ $delete_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
 			check_query=`cat phoneBook.log | grep -c $delete_query`
-			printf $check_query
+			# printf $check_query
 			
-			if [[ $check_query > 0 ]]; then printf "\e[32m DELETED Successfully! ✔\e[0m\n\n"; else printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n"; fi
+			if [[ $check_query > 0 ]]; then
 			sed -i -e "/$delete_query/d" phoneBook.log # huuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuraaaay :((
 			sleep 2
-			# clear
-			printf "\t\e[1;96m                  PHONE BOOK NOW: \e[0m\n"
-			lolcat phoneBook.log
+			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to DELETE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+			# DELETE a document in my contacts collection..
+			deleteContactDocument
+			printf "\n\n\t\t\e[32m DELETED Successfully! ✔\e[0m\n\n";
+			sleep 2
+			else
+			printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n";
+			fi
 		else
 			break
 		fi
@@ -304,6 +312,10 @@ deleteContact() {
 listContacts() {
 		printf "\e[1;96m                  YOUR PHONE BOOK \e[0m\n\n"
 		lolcat phoneBook.log
+		sleep 1
+		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to LIST this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+		# Show a document in my contacts collection..
+		listContactDocument
 }
 
 startMyScript() {
@@ -345,17 +357,11 @@ startMyScript() {
 	
 	dlt)
 		deleteContact
-		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to DELETE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-		# DELETE a document in my contacts collection..
-		deleteContactDocument
 	;;
 	
 	dis)
 		listContacts
 		# echo "->$contact_ID : $contact_firstName : $contact_lastName : $contact_gender : $contact_number : $contact_email : $contact_address"
-		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to LIST this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-		# Show a document in my contacts collection..
-		listContactDocument
 	;;
 	
 	q)
