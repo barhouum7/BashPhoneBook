@@ -12,7 +12,7 @@ user_interrupt(){
         printf "\e[0m\n"
         printf "\n\e[0m\e[1;36m\t   Exiting... THANK YOU! (❁'◡'❁)\n"
         sleep 1
-        # (for i in $(seq 0 10 100); do echo $i; sleep 1; done) | zenity --progress --title "Bye! THANK YOu!" -- auto-close
+        #(for i in $(seq 0 10 100); do echo $i; sleep 1; done) | zenity --progress --title "Bye! THANK YOu!" -- auto-close
         printf "\e[0m\n"
         exit 1
 }
@@ -151,47 +151,47 @@ searchForContact() {
 		if [[ $search_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
 			searchQuery=">"$search_query
 			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -i $searchQuery phoneBook.log > /dev/null 2>&1;then
-			check_query=`cat phoneBook.log | grep -ci $searchQuery`
-			#printf $check_query
+				check_query=`cat phoneBook.log | grep -ci $searchQuery` # This LOC is to check if the a query exist inside the file.
+				#printf $check_query
 			
-			if [[ $check_query > 0 ]]; then 
-			printf "\e[32m The desired contact has been found! ✔\e[0m\n\n";
-			grep -i --color=always $searchQuery phoneBook.log
-			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-			# SEARCHING to a document in my contacts collection..
-			searchContactDocument
+				if [[ $check_query > 0 ]]; then 
+					printf "\e[32m The desired contact has been found! ✔\e[0m\n\n";
+					grep -i --color=always $searchQuery phoneBook.log
+					({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+					# SEARCHING to a document in my contacts collection..
+					searchContactDocument
+				else
+					printf "\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n";
+				fi
 			else
-			printf "\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n";
-			fi
-			else
-			check_query=`cat phoneBook.log | grep -ci $search_query`
-			#printf $check_query
+				check_query=`cat phoneBook.log | grep -ci $search_query` # This LOC is to check if the a query exist inside the file.
+				#printf $check_query
 			
-			if [[ $check_query > 0 ]]; then 
-			printf "\e[32m The desired contact has been found! ✔\e[0m\n\n";
-			grep -i --color=always $search_query phoneBook.log
+				if [[ $check_query > 0 ]]; then 
+					printf "\e[32m The desired contact has been found! ✔\e[0m\n\n";
+					grep -i --color=always $search_query phoneBook.log
 
-			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-			# SEARCHING to a document in my contacts collection..
-			searchContactDocument
-			else
-			printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n";
-			fi
+					({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+					# SEARCHING to a document in my contacts collection..
+					searchContactDocument
+				else
+					printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n";
+				fi
 			
 			fi
 		else
 		if ! [[ $search_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
-			check_query=`cat phoneBook.log | grep -ci $search_query`
+			check_query=`cat phoneBook.log | grep -ci $search_query` # This LOC is to check if the a query exist inside the file.
 			#printf $check_query
 			
 			if [[ $check_query > 0 ]]; then 
-			printf "\e[32m The desired contact has been found! ✔\e[0m\n\n";
-			grep -i --color=always $search_query phoneBook.log
-			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-			# SEARCHING to a document in my contacts collection..
-			searchContactDocument
+				printf "\e[32m The desired contact has been found! ✔\e[0m\n\n";
+				grep -i --color=always $search_query phoneBook.log
+				({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+				# SEARCHING to a document in my contacts collection..
+				searchContactDocument
 			else
-			printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n";
+				printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n";
 			fi
 		else
 			break
@@ -203,6 +203,42 @@ searchForContact() {
 
 
 
+
+helperEditFunction() {
+	########################################### Input Control for old_pattern AND new_pattern ##################################################################
+		read -p $'\n\e[1;96m ->\e[0m Enter the exact name of the field that you want to change it [contact_ID, firstName, lastName, gender, phoneNumber, email, address]: ' old_pattern_title
+		read -p $'\n\e[1;96m ->\e[0m Enter the exact value that you want to change in this contact info: ' old_pattern
+		read -p $'\n\e[1;96m ->\e[0m Enter the new info: ' new_pattern
+		
+		if [[ -z "$old_pattern_title" || -z "$old_pattern" || -z "$new_pattern" ]]; then
+			printf "\n\t\e[1;31m[!] \e[0m\e[31mThese fields are required to EDIT!\e[0m\n\n"
+			sleep 2
+			clear
+		else
+		
+				check_query=`cat phoneBook.log | grep -ci $old_pattern` # This LOC is to check if the a query exist inside the file.
+				# printf $check_query
+				lineNumber=awk '/$old_pattern/{print NR}' phoneBook.log > /dev/null 2>&1 # Also I can use this command for this purpose: `grep -nci $old_pattern phoneBook.log`
+				if [[ $check_query > 0 ]]; then
+					sleep 2
+			
+					sed -i phoneBook.log -e "$lineNumber s/$old_pattern/$new_pattern/"
+			
+					({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to UPDATE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+					# UPDATE a document in my contacts collection..
+					updateContactDocument
+				else
+					printf "\n\t\e[1;31m[!] \e[0m\e[31mI cannot find any contact with this information. Please, Try again!\e[0m\n\n\n";
+				fi
+		fi
+}
+
+
+
+
+
+
+
 editContact() {
 				printf "\e[1;96m                  	EDIT CONTACT INFO \e[0m\n\n"
 		while true
@@ -211,40 +247,30 @@ editContact() {
 		printf "\n\n\e[1;96mYOUR PHONE BOOK: \e[0m\n\n"
 		lolcat phoneBook.log
 		read -p $'\n\e[1;96m ->\e[0m Enter ID of the contact: ' getContactId
-		read -p $'\n\e[1;96m ->\e[0m Enter the exact name of the field that you to change it [contact_ID, firstName, lastName, gender, phoneNumber, email, address]: ' old_pattern_title
-		read -p $'\n\e[1;96m ->\e[0m Enter the exact value that you want to change in this contact info: ' old_pattern
-		read -p $'\n\e[1;96m ->\e[0m Enter the new info: ' new_pattern
 
 
-		if [[ -z "$getContactId" || -z "$old_pattern_title" || -z "$old_pattern" || -z "$new_pattern" ]]; then
-			printf "\n\e[31m Please, enter contact's ID to EDIT!\e[0m\n"
-			printf "\n\e[31m These fields are required to EDIT!\e[0m\n\n"
-			sleep 2
+		if [[ -z "$getContactId" ]]; then
 			clear
+			printf "\n\t\e[1;31m[!] \e[0m\e[31mPlease, enter contact's ID to EDIT!\e[0m\n\n"
 		else
 		if [[ $getContactId =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
 			searchForId=">"$getContactId
 			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -i $searchForId phoneBook.log > /dev/null 2>&1;then
-			check_query=`cat phoneBook.log | grep -ci $searchForId`
-			if [[ $check_query > 0 ]]; then
-			printf "\n\e[32m The desired contact has been found! ✔\e[0m\n\n";
-			sleep 2
+				check_query=`cat phoneBook.log | grep -ci $searchForId` # This LOC is to check if the a query exist inside the file.
+				if [[ $check_query > 0 ]]; then
+					printf "\n\e[32m The desired contact has been found! ✔\e[0m\n\n";
+					sleep 2
 			
-			lineNumber=`grep -nc $searchForId phoneBook.log` # Also I can use this command for this purpose: awk '/$searchForId/{print NR}' phoneBook.log
-			#printf $lineNumber
-			printf "\n\n"
-			sed -i phoneBook.log -e "$lineNumber s/$old_pattern/$new_pattern/"
-			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to UPDATE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-			# UPDATE a document in my contacts collection..
-			updateContactDocument
-			else
-			printf "\n\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n";
-			fi
+					helperEditFunction
+
+				else
+					printf "\n\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n";
+				fi
 			fi
 		else
 		if ! [[ $getContactId =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
 			clear
-			printf "\n\e[31m Contact ID must be a number!\e[0m\n\n"
+			printf "\n\t\e[1;31m[!] \e[0m\e[31mContact ID must be a number!\e[0m\n\n"
 			sleep 2
 		else
 			break
