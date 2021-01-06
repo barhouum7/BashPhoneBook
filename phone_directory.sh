@@ -22,13 +22,25 @@ stop() {
 
 checkmongo=$(ps aux | grep -o "mongo" | head -n1)
 if [[ $checkmongo == *'mongo'* ]]; then
-pkill -f -2 mongo > /dev/null 2>&1
-killall mongo > /dev/null 2>&1
+pkill -f -2 mongo > /dev/null 2>&1 # 				Explaination of this command (> /dev/null 2>&1), In short, by using this command you are telling your program not to shout while executing.
+
+
+<<'EXPLAINATION-COMMENT'
+
+								/dev/null is a special and pseudo-device file which is of character-special-file type that provides serial access.
+
+								/dev/null accepts and discards all input; produces no output (always returns an end-of-file indication on a read). Reference
+
+
+EXPLAINATION-COMMENT
+
+
+killall mongo > /dev/null 2>&1 # 				2>&1 file descriptor
 fi
 checkmongod=$(ps aux | grep -o "mongod" | head -n1)
 if [[ $checkmongod == *'mongod'* ]]; then
-pkill -f -2 mongod > /dev/null 2>&1
-killall mongod > /dev/null 2>&1
+pkill -f -2 mongod > /dev/null 2>&1 # 				So 2>&1 simply says redirect standard error to standard output.
+killall mongod > /dev/null 2>&1 # 				& means whatever follows is a file descriptor, not a filename.
 fi
 checkmongosh=$(ps aux | grep -o "mongosh" | head -n1)
 if [[ $checkmongosh == *'mongosh'* ]]; then
