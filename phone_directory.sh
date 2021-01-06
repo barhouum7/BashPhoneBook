@@ -12,7 +12,6 @@ user_interrupt(){
         printf "\e[0m\n"
         printf "\n\e[0m\e[1;36m\t   Exiting... THANK YOU! (❁'◡'❁)\n"
         sleep 1
-        #(for i in $(seq 0 10 100); do echo $i; sleep 1; done) | zenity --progress --title "Bye! THANK YOu!" -- auto-close
         printf "\e[0m\n"
         exit 1
 }
@@ -94,12 +93,13 @@ listContactDocument() {
 
 addContact() {
 
-			printf "\e[1;96m                  Add NEW CONTACT \e[0m\n\n"
+			printf "\e[1;96m                  ADD NEW CONTACT \e[0m\n\n"
 		
 		# contactId, first name, father's name, gender, phone number, email, and address
 		while true
 		do
-		read -p $'\n\e[1;96m ->\e[0m Enter Contact Id: ' contact_ID
+		# read -p $'\n\e[1;96m ->\e[0m Enter Contact Id: ' contact_ID
+		contact_ID=$(zenity --width=400 --height=200 --entry --text "Enter Contact Id:" --title "ADD NEW CONTACT" --entry-text="1")
 		
 		# Validate if any input field is left blank. If an input field is left blank, display appropriate message and stop execution of script
 		if [[ -z "$contact_ID" ]]; then
@@ -153,7 +153,10 @@ searchForContact() {
 			printf "\e[1;96m                  SEARCH FOR CONTACT \e[0m\n\n"
 		while true
 		do
-		read -p $'\n\e[1;96m ->\e[0m Enter any query for contact to search: ' search_query
+		# read -p $'\n\e[1;96m ->\e[0m Enter any query for contact to search: ' search_query
+		# (for i in $(seq 0 10 100); do echo $i; sleep 1; done) | zenity --progress --title "Bye! THANK YOu!" -- auto-close
+	        search_query=$(zenity --width=400 --height=200 --entry --text "Enter any query for contact to search:" --title "SEARCH FOR CONTACT" --entry-text="John")
+	        (for i in $(seq 0 10 100); do echo $i; sleep 0.5; done) | (zenity --width=300 --height=100 --title="Collating Information" --progress --pulsate --text="Checking contacts..." --auto-kill --auto-close)
 		clear
 		printf "\e[33mPress \e[0m\e[1;33mCTRL+C \e[0m\e[33mOR \e[0m\e[1;33mCTRL+Z \e[0m\e[33mto Exit.\e[0m\n\n"
 		printf "\e[1;96m                  SEARCH RESULTS: \e[0m\n\n"
@@ -258,7 +261,9 @@ editContact() {
 		printf "\e[33mPress \e[0m\e[1;33mCTRL+C \e[0m\e[33mOR \e[0m\e[1;33mCTRL+Z \e[0m\e[33mto Exit.\e[0m\n\n"
 		printf "\n\n\e[1;96mYOUR PHONE BOOK: \e[0m\n\n"
 		lolcat phoneBook.log
-		read -p $'\n\e[1;96m ->\e[0m Enter ID of the contact: ' getContactId
+		# read -p $'\n\e[1;96m ->\e[0m Enter ID of the contact: ' getContactId
+		getContactId=$(zenity --width=400 --height=200 --entry --text "Enter ID of the contact:" --title "EDIT CONTACT INFO" --entry-text="1")
+	        (for i in $(seq 0 10 100); do echo $i; sleep 0.5; done) | (zenity --width=300 --height=100 --title="Collating Information" --progress --pulsate --text="Checking for ID..." --auto-kill --auto-close)
 
 
 		if [[ -z "$getContactId" ]]; then
@@ -298,7 +303,10 @@ deleteContact() {
 		do
 		printf "\n\n\t\e[1;96m                  PHONE BOOK NOW: \e[0m\n"
 		lolcat phoneBook.log
-		read -p $'\n\e[1;96m ->\e[0m Enter the contact`s ID or any related info to DELETE it (Case-sensitive): ' delete_query
+		# read -p $'\n\e[1;96m ->\e[0m Enter the contact`s ID or any related info to DELETE it (Case-sensitive): ' delete_query
+		delete_query=$(zenity --entry --text "Enter the contact's ID or any related info to DELETE it (Case-sensitive):" --title "DELETE CONTACT" --entry-text="John")
+	        (for i in $(seq 0 10 100); do echo $i; sleep 0.5; done) | (zenity --width=200 --height=100 --title="Collating Information" --progress --pulsate --text="Checking contacts..." --auto-kill --auto-close)
+		
 		clear
 		printf "\e[33mPress \e[0m\e[1;33mCTRL+C \e[0m\e[33mOR \e[0m\e[1;33mCTRL+Z \e[0m\e[33mto Exit.\e[0m\n\n"
 		
@@ -367,7 +375,8 @@ startMyScript() {
 	printf "\e[1;33m dis - \e[0m\e[1;33m DISPLAY \e[0m\e[33mthe Phone Book\e[0m\n" | pv -qL 100
 	printf "\n\n\e[33m Press \e[0m\e[1;33mq \e[0m\e[33mOR \e[0m\e[1;33mCTRL+C \e[0m\e[33mto Exit.\e[0m\n\n" | pv -qL 100
 	
-	read -p $'\e[1;96m->\e[0m Enter your choice: ' user_choice
+	# read -p $'\e[1;96m->\e[0m Enter your choice: ' user_choice
+	user_choice=$(zenity --width=400 --height=200 --entry --text "Enter your choice:" --title "Welcome to my Phone Book Management System" --entry-text="add")
 	clear
 	
 	case $user_choice in
