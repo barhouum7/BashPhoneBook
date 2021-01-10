@@ -15,7 +15,7 @@ Adding, inserting, modifying, and updating new records, searching for saved cont
 
 <b>Watch the demo:</b>
 
-[![Watch the demo](https://i.imgur.com/fFggSJU.png)](https://youtu.be/v4kmgBx_E70?list=PLAAFm97yITReOxGUdXhH4HC4WZx2zB7Xr)
+<a href="https://youtu.be/v4kmgBx_E70?list=PLAAFm97yITReOxGUdXhH4HC4WZx2zB7Xr"><img src="https://i.imgur.com/fFggSJU.png" alt="Watch the demo" width="700" height="370"></a>
 
 Note: It will be with a friendly graphical interface as a final version.
 
@@ -24,11 +24,10 @@ Note: It will be with a friendly graphical interface as a final version.
 <ul><li>Go to the <a href="https://github.com/barhouum7/DFEncriptor/issues">issue</a> section</li></ul>
 <ul><li>Click on New issue</li></ul>
 <ul><li>Write title and describe about bug</li></ul> 
-<ul><li>Feel free and submit <a href="https://github.com/barhouum7/DFEncriptor/issues">new issue</a> ✅</li></ul><hr>
+<ul><li>Feel free and submit <a href="https://github.com/barhouum7/DFEncriptor/issues">new issue</a> ✅</li></ul>
 
 <h2>How To Reach Me? 📧</h2>
 <h3>If you would like to get in touch with me, Feel free to send me an email or you could find me on Twitter : </h3><br>E-mail: <a href="mailto:bb.med2000@gmail.com?Subject=Hello%20again" target="_top">Send Mail 📧</a><br>Twitter: <a href="https://twitter.com/MindH4Q3Rr">🐦</a>
-<hr>
 
 ## Installation [Linux](https://wikipedia.org/wiki/Linux) [![alt tag](http://icons.iconarchive.com/icons/dakirby309/simply-styled/32/OS-Linux-icon.png)](https://fr.wikipedia.org/wiki/Linux)
 
