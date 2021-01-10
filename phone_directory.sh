@@ -98,8 +98,8 @@ addContact() {
 		# contactId, first name, father's name, gender, phone number, email, and address
 		while true
 		do
-		# read -p $'\n\e[1;96m ->\e[0m Enter Contact Id: ' contact_ID
-		contact_ID=$(zenity --width=400 --height=200 --entry --text "Enter Contact Id:" --title "ADD NEW CONTACT" --entry-text="1")
+		read -p $'\n\e[1;96m ->\e[0m Enter Contact Id: ' contact_ID
+		#contact_ID=$(zenity --width=400 --height=200 --entry --text "Enter Contact Id:" --title "ADD NEW CONTACT" --entry-text="1")
 		
 		# Validate if any input field is left blank. If an input field is left blank, display appropriate message and stop execution of script
 		if [[ -z "$contact_ID" ]]; then
@@ -153,10 +153,10 @@ searchForContact() {
 			printf "\e[1;96m                  SEARCH FOR CONTACT \e[0m\n\n"
 		while true
 		do
-		# read -p $'\n\e[1;96m ->\e[0m Enter any query for contact to search: ' search_query
+		read -p $'\n\e[1;96m ->\e[0m Enter any query for contact to search: ' search_query
 		# (for i in $(seq 0 10 100); do echo $i; sleep 1; done) | zenity --progress --title "Bye! THANK YOu!" -- auto-close
-	        search_query=$(zenity --width=400 --height=200 --entry --text "Enter any query for contact to search:" --title "SEARCH FOR CONTACT" --entry-text="John")
-	        (for i in $(seq 0 10 100); do echo $i; sleep 0.5; done) | (zenity --width=300 --height=100 --title="Collating Information" --progress --pulsate --text="Checking contacts..." --auto-kill --auto-close)
+	        #search_query=$(zenity --width=400 --height=200 --entry --text "Enter any query for contact to search:" --title "SEARCH FOR CONTACT" --entry-text="John")
+	        #(for i in $(seq 0 10 100); do echo $i; sleep 0.5; done) | (zenity --width=300 --height=100 --title="Collating Information" --progress --pulsate --text="Checking contacts..." --auto-kill --auto-close)
 		clear
 		printf "\e[33mPress \e[0m\e[1;33mCTRL+C \e[0m\e[33mOR \e[0m\e[1;33mCTRL+Z \e[0m\e[33mto Exit.\e[0m\n\n"
 		printf "\e[1;96m                  SEARCH RESULTS: \e[0m\n\n"
@@ -165,13 +165,13 @@ searchForContact() {
 		else
 		if [[ $search_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
 			searchQuery=">"$search_query
-			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -i $searchQuery phoneBook.log > /dev/null 2>&1;then
-				check_query=`cat phoneBook.log | grep -ci $searchQuery` # This LOC is to check if the a query exist inside the file.
+			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -iw $searchQuery phoneBook.log > /dev/null 2>&1;then
+				check_query=`cat phoneBook.log | grep -ciw $searchQuery` # This LOC is to check if the a query exist inside the file.
 				#printf $check_query
 			
 				if [[ $check_query > 0 ]]; then 
 					printf "\e[32m The desired contact has been found! ✔\e[0m\n\n";
-					grep -i --color=always $searchQuery phoneBook.log
+					grep -iw --color=always $searchQuery phoneBook.log
 					({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
 					# SEARCHING to a document in my contacts collection..
 					searchContactDocument
@@ -179,12 +179,12 @@ searchForContact() {
 					printf "\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n";
 				fi
 			else
-				check_query=`cat phoneBook.log | grep -ci $search_query` # This LOC is to check if the a query exist inside the file.
+				check_query=`cat phoneBook.log | grep -ciw $search_query` # This LOC is to check if the a query exist inside the file.
 				#printf $check_query
-			
-				if [[ $check_query > 0 ]]; then 
+				query_length=`expr length "$search_query"`
+				if [[ $check_query > 0 && $query_length == 8 ]]; then 
 					printf "\e[32m The desired contact has been found! ✔\e[0m\n\n";
-					grep -i --color=always $search_query phoneBook.log
+					grep -iw --color=always $search_query phoneBook.log
 
 					({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
 					# SEARCHING to a document in my contacts collection..
@@ -196,12 +196,12 @@ searchForContact() {
 			fi
 		else
 		if ! [[ $search_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
-			check_query=`cat phoneBook.log | grep -ci $search_query` # This LOC is to check if the a query exist inside the file.
+			check_query=`cat phoneBook.log | grep -ciw $search_query` # This LOC is to check if the a query exist inside the file.
 			#printf $check_query
 			
 			if [[ $check_query > 0 ]]; then 
 				printf "\e[32m The desired contact has been found! ✔\e[0m\n\n";
-				grep -i --color=always $search_query phoneBook.log
+				grep -iw --color=always $search_query phoneBook.log
 				({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SEARCH for this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
 				# SEARCHING to a document in my contacts collection..
 				searchContactDocument
@@ -231,19 +231,27 @@ helperEditFunction() {
 			clear
 		else
 		
-				check_query=`cat phoneBook.log | grep -ci $old_pattern` # This LOC is to check if the a query exist inside the file.
-				# printf $check_query
-				lineNumber=awk '/$old_pattern/{print NR}' phoneBook.log > /dev/null 2>&1 # Also I can use this command for this purpose: `grep -nci $old_pattern phoneBook.log`
+				check_query=`cat phoneBook.log | grep -ciw $old_pattern` # This LOC is to check if the a query exist inside the file.
+				#printf $check_query
+				
 				if [[ $check_query > 0 ]]; then
 					sleep 2
 			
+					lineNumber=`grep -n ">"$getContactId phoneBook.log | head -c 1` # Also I can use this command for this purpose: `awk '/$getContactId/{print NR}' phoneBook.log > /dev/null 2>&1`
+					#printf "\n $lineNumber"
 					sed -i phoneBook.log -e "$lineNumber s/$old_pattern/$new_pattern/"
 			
 					({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to UPDATE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
 					# UPDATE a document in my contacts collection..
 					updateContactDocument
+					printf "\n\n\t\t\e[32m UPDATED Successfully! ✔\e[0m\n\n"
+					printf "\n\n\e[1;96mYOUR PHONE BOOK NOW: \e[0m\n\n"
+					lolcat phoneBook.log
+					sleep 10
 				else
+					clear
 					printf "\n\t\e[1;31m[!] \e[0m\e[31mI cannot find any contact with this information. Please, Try again!\e[0m\n\n\n";
+					sleep 2
 				fi
 		fi
 }
@@ -258,12 +266,13 @@ editContact() {
 				printf "\e[1;96m                  	EDIT CONTACT INFO \e[0m\n\n"
 		while true
 		do
+		clear
 		printf "\e[33mPress \e[0m\e[1;33mCTRL+C \e[0m\e[33mOR \e[0m\e[1;33mCTRL+Z \e[0m\e[33mto Exit.\e[0m\n\n"
 		printf "\n\n\e[1;96mYOUR PHONE BOOK: \e[0m\n\n"
 		lolcat phoneBook.log
-		# read -p $'\n\e[1;96m ->\e[0m Enter ID of the contact: ' getContactId
-		getContactId=$(zenity --width=400 --height=200 --entry --text "Enter ID of the contact:" --title "EDIT CONTACT INFO" --entry-text="1")
-	        (for i in $(seq 0 10 100); do echo $i; sleep 0.5; done) | (zenity --width=300 --height=100 --title="Collating Information" --progress --pulsate --text="Checking for ID..." --auto-kill --auto-close)
+		read -p $'\n\e[1;96m ->\e[0m Enter ID of the contact: ' getContactId
+		#getContactId=$(zenity --width=400 --height=200 --entry --text "Enter ID of the contact:" --title "EDIT CONTACT INFO" --entry-text="1")
+	        #(for i in $(seq 0 10 100); do echo $i; sleep 0.5; done) | (zenity --width=300 --height=100 --title="Collating Information" --progress --pulsate --text="Checking for ID..." --auto-kill --auto-close)
 
 
 		if [[ -z "$getContactId" ]]; then
@@ -272,17 +281,17 @@ editContact() {
 		else
 		if [[ $getContactId =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
 			searchForId=">"$getContactId
-			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -i $searchForId phoneBook.log > /dev/null 2>&1;then
-				check_query=`cat phoneBook.log | grep -ci $searchForId` # This LOC is to check if the a query exist inside the file.
+			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -iw $searchForId phoneBook.log > /dev/null 2>&1; then
+				check_query=`cat phoneBook.log | grep -ciw $searchForId` # This LOC is to check if the a query exist inside the file.
 				if [[ $check_query > 0 ]]; then
 					printf "\n\e[32m The desired contact has been found! ✔\e[0m\n\n";
 					sleep 2
-			
 					helperEditFunction
-
-				else
-					printf "\n\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n";
 				fi
+			else
+				clear
+				printf "\n\e[31m I cannot find any contact with this ID. Please, Try again!\e[0m\n\n\n";
+				sleep 1
 			fi
 		else
 		if ! [[ $getContactId =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
@@ -301,11 +310,11 @@ deleteContact() {
 			printf "\e[1;96m                  DELETE CONTACT \e[0m\n\n"
 		while true
 		do
-		printf "\n\n\t\e[1;96m                  PHONE BOOK NOW: \e[0m\n"
+		printf "\n\n\t\e[1;96m                  YOUR PHONE BOOK: \e[0m\n"
 		lolcat phoneBook.log
-		# read -p $'\n\e[1;96m ->\e[0m Enter the contact`s ID or any related info to DELETE it (Case-sensitive): ' delete_query
-		delete_query=$(zenity --entry --text "Enter the contact's ID or any related info to DELETE it (Case-sensitive):" --title "DELETE CONTACT" --entry-text="John")
-	        (for i in $(seq 0 10 100); do echo $i; sleep 0.5; done) | (zenity --width=200 --height=100 --title="Collating Information" --progress --pulsate --text="Checking contacts..." --auto-kill --auto-close)
+		read -p $'\n\e[1;96m ->\e[0m Enter the contact`s ID or any related info to DELETE it (Case-sensitive): ' delete_query
+		#delete_query=$(zenity --entry --text "Enter the contact's ID or any related info to DELETE it (Case-sensitive):" --title "DELETE CONTACT" --entry-text="John")
+	        #(for i in $(seq 0 10 100); do echo $i; sleep 0.5; done) | (zenity --width=200 --height=100 --title="Collating Information" --progress --pulsate --text="Checking contacts..." --auto-kill --auto-close)
 		
 		clear
 		printf "\e[33mPress \e[0m\e[1;33mCTRL+C \e[0m\e[33mOR \e[0m\e[1;33mCTRL+Z \e[0m\e[33mto Exit.\e[0m\n\n"
@@ -315,36 +324,65 @@ deleteContact() {
 		else
 		if [[ $delete_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
 			deleteQuery=">"$delete_query
-			if [ head -c 10 phoneBook.log > /dev/null 2>&1 ] | grep -i $deleteQuery phoneBook.log > /dev/null 2>&1;then
-			sed -i -e "/$deleteQuery/d" phoneBook.log
-			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to DELETE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-			# DELETE a document in my contacts collection..
-			deleteContactDocument
-			printf "\n\n\t\t\e[32m DELETED Successfully! ✔\e[0m\n\n"
-			sleep 2
+			if [ head -c 20 phoneBook.log > /dev/null 2>&1 ] | grep -iw $deleteQuery phoneBook.log > /dev/null 2>&1;then
+				check_query=`cat phoneBook.log | grep -ciw $deleteQuery` # This LOC is to check if the a query exist inside the file.
+				if [[ $check_query > 0 ]]; then
+					printf "\n\e[32m The desired contact has been found! ✔\e[0m\n\n";
+					sleep 2
+					sed -i -e "/$deleteQuery/d" phoneBook.log
+					({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to DELETE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+					# DELETE a document in my contacts collection..
+					deleteContactDocument
+					printf "\n\n\t\t\e[32m DELETED Successfully! ✔\e[0m\n\n"
+					printf "\e[1;96m                  YOUR PHONE BOOK NOW:\e[0m\n\n"
+					lolcat phoneBook.log
+					sleep 10
+					clear
+				fi
 			else
-			sed -i -e "/$delete_query/d" phoneBook.log
-			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to DELETE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-			# DELETE a document in my contacts collection..
-			deleteContactDocument
-			printf "\n\n\t\t\e[32m DELETED Successfully! ✔\e[0m\n\n"
-			sleep 2
+				check_query=`cat phoneBook.log | grep -ciw $delete_query` # This LOC is to check if the a query exist inside the file.
+				#printf "\n $check_query"
+				query_length=`expr length "$delete_query"`					
+				if [[ $check_query > 0 && $query_length == 8 ]]; then
+					printf "\n\e[32m The desired contact has been found! ✔\e[0m\n\n";
+					sleep 2
+					queryLine=`grep -iw $delete_query phoneBook.log`
+					#printf "\n $queryLine"
+					sed -i -e "/$queryLine/d" phoneBook.log
+					({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to DELETE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+					# DELETE a document in my contacts collection..
+					deleteContactDocument
+					printf "\n\n\t\t\e[32m DELETED Successfully! ✔\e[0m\n\n"
+					printf "\e[1;96m                  YOUR PHONE BOOK NOW:\e[0m\n\n"
+					lolcat phoneBook.log
+					sleep 10
+					clear
+				else
+					clear
+					printf "\n\e[31m I cannot find any contact with this Info. Please, Try again!\e[0m\n\n\n";
+					sleep 1
+				fi			
 			fi
 		else
 		if ! [[ $delete_query =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
-			check_query=`cat phoneBook.log | grep -c $delete_query`
+
+			check_query=`cat phoneBook.log | grep -cw $delete_query`
 			# printf $check_query
 			
 			if [[ $check_query > 0 ]]; then
-			sed -i -e "/$delete_query/d" phoneBook.log # huuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuraaaay :((
-			sleep 2
-			({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to DELETE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
-			# DELETE a document in my contacts collection..
-			deleteContactDocument
-			printf "\n\n\t\t\e[32m DELETED Successfully! ✔\e[0m\n\n";
-			sleep 2
+				printf "\n\e[32m The desired contact has been found! ✔\e[0m\n\n";
+				sed -i -e "/$delete_query/d" phoneBook.log # huuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuraaaay :((
+				sleep 2
+				({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to DELETE this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+				# DELETE a document in my contacts collection..
+				deleteContactDocument
+				printf "\n\n\t\t\e[32m DELETED Successfully! ✔\e[0m\n\n";
+				printf "\e[1;96m                  YOUR PHONE BOOK NOW:\e[0m\n\n"
+				lolcat phoneBook.log
+				sleep 10
+				clear
 			else
-			printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n";
+				printf "\e[31m I cannot find any contact with this information. Please, Try again!\e[0m\n\n\n";
 			fi
 		else
 			break
@@ -359,7 +397,7 @@ listContacts() {
 		printf "\e[1;96m                  YOUR PHONE BOOK \e[0m\n\n"
 		lolcat phoneBook.log
 		sleep 1
-		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to LIST this Contact, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to LIST Contacts, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
 		# Show a document in my contacts collection..
 		listContactDocument
 }
@@ -375,8 +413,8 @@ startMyScript() {
 	printf "\e[1;33m dis - \e[0m\e[1;33m DISPLAY \e[0m\e[33mthe Phone Book\e[0m\n" | pv -qL 100
 	printf "\n\n\e[33m Press \e[0m\e[1;33mq \e[0m\e[33mOR \e[0m\e[1;33mCTRL+C \e[0m\e[33mto Exit.\e[0m\n\n" | pv -qL 100
 	
-	# read -p $'\e[1;96m->\e[0m Enter your choice: ' user_choice
-	user_choice=$(zenity --width=400 --height=200 --entry --text "Enter your choice:" --title "Welcome to my Phone Book Management System" --entry-text="add")
+	read -p $'\e[1;96m->\e[0m Enter your choice: ' user_choice
+	#user_choice=$(zenity --width=400 --height=200 --entry --text "Enter your choice:" --title "Welcome to my Phone Book Management System" --entry-text="add")
 	clear
 	
 	case $user_choice in
@@ -389,7 +427,7 @@ startMyScript() {
 	
 	add)
 		addContact
-		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SAVE this Contact on Database, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
+		({ printf >&2  "\n\e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92mConnecting to MongoDB Cluster to SAVE this Contact on the Database, please wait...\n\e[0m"; apt-get update > /dev/null || printf "\n\n\e[1;91mConnection Failed!\n\n\e[0m"; }) & wait $!
 		# Adding the new document to my contacts collection..
 		addContactDocument
 	;;
