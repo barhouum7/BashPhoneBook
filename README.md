@@ -15,7 +15,8 @@ Adding, inserting, modifying, and updating new records, searching for saved cont
 
 <b>Watch the demo:</b>
 
-<a href="https://youtu.be/v4kmgBx_E70?list=PLAAFm97yITReOxGUdXhH4HC4WZx2zB7Xr"><img src="https://i.imgur.com/fFggSJU.png" alt="Watch the demo" width="700" height="370"></a>
+<a href="https://youtu.be/v4kmgBx_E70?list=PLAAFm97yITReOxGUdXhH4HC4WZx2zB7Xr"><img src="https://github.com/barhouum7/BashPhoneBook/blob/master/MyScriptDemo.gif?raw=true" alt="Watch the demo" width="700" height="370"></a>
+
 
 Note: It will be with a friendly graphical interface as a final version.
 
