@@ -4,11 +4,11 @@
 <a href="https://github.com/barhouum7/BashPhoneBook"><img src="https://img.shields.io/badge/Supported%20OS-Linux%2FMacOS-brightgreengreen.svg" alt="Build" data-canonical-src="https://img.shields.io/badge/Supported%20OS-Linux%2FMacOS-brightgreengreen.svg" style="max-width:100%;"></a>
 <a href="https://github.com/barhouum7/BashPhoneBook/blame/master/LICENSE"><img src="https://img.shields.io/packagist/l/doctrine/orm.svg" alt="Build" data-canonical-src="https://img.shields.io/packagist/l/doctrine/orm.svg" style="max-width:100%;"></a></p>
 
-In this project, I'm going to build a <ins>phone book using bash scripting</ins> that lets us perform simple phone book operations like our cell phones. It is a BASH script that can be used to <ins>add</ins>, <ins>view</ins>, <ins>edit</ins>, <ins>search</ins>, and <ins>remove</ins> phone directory related records.
+This a <ins>phone book using bash scripting</ins> that lets us perform simple phone book operations like our cell phones. It is a BASH script that can be used to <ins>add</ins>, <ins>view</ins>, <ins>edit</ins>, <ins>search</ins>, and <ins>remove</ins> phone directory related records.
 
 Personal information such as first name, father's name, gender, phone number, email, and address are requested while adding a record in the phone book. These records can then be modified, inserted, searched for, and removed.
 
-<b>I will Use NoSQL MongoDB Atlas as free cloud database service, deployed and fully managed over AWS.</b>
+<b>I've Used NoSQL MongoDB Atlas as free cloud database service, deployed and fully managed over AWS.</b>
 
 Adding, inserting, modifying, and updating new records, searching for saved contacts, and deleting phone book records, these operations are the basic functions that form up the main menu of this phone book script (as shown in the menu screenshot below)
 <img src="https://i.imgur.com/1MBJdVZ.png" data-canonical-src="https://i.imgur.com/1MBJdVZ.png" width="700" height="370">
