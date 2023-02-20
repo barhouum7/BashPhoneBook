@@ -1,8 +1,8 @@
 <h1>🔥 📣 BashPhoneBook</h1>
-<p><a href="https://github.com/barhouum7/BashPhoneBook"><img src="https://img.shields.io/badge/BashPhoneBook-1.0-brightgreen.svg" alt="Version" data-canonical-src="https://img.shields.io/badge/BashPhoneBook-1.0-brightgreen.svg?maxAge=259200" style="max-width:100%;"></a>
+<p><a href="https://github.com/barhouum7/BashPhoneBook"><img src="https://img.shields.io/badge/BashPhoneBook-1.0.0-brightgreen.svg" alt="Version" data-canonical-src="https://img.shields.io/badge/BashPhoneBook-1.0.0-brightgreen.svg?maxAge=259200" style="max-width:100%;"></a>
 <a href="https://github.com/barhouum7/BashPhoneBook"><img src="https://img.shields.io/badge/Release-Stable-brightgreen.svg" alt="Stage" data-canonical-src="https://img.shields.io/badge/Release-Stable-brightgreen.svg" style="max-width:100%;"></a>
 <a href="https://github.com/barhouum7/BashPhoneBook"><img src="https://img.shields.io/badge/Supported%20OS-Linux%2FMacOS-brightgreengreen.svg" alt="Build" data-canonical-src="https://img.shields.io/badge/Supported%20OS-Linux%2FMacOS-brightgreengreen.svg" style="max-width:100%;"></a>
-<a href="https://github.com/barhouum7/BashPhoneBook/blame/master/LICENSE"><img src="https://img.shields.io/packagist/l/doctrine/orm.svg" alt="Build" data-canonical-src="https://img.shields.io/packagist/l/doctrine/orm.svg" style="max-width:100%;"></a></p>
+<a href="https://github.com/barhouum7/BashPhoneBook/blame/master/LICENSE"><img src="https://img.shields.io/github/license/barhouum7/bashphonebook" alt="Build" data-canonical-src="https://img.shields.io/github/license/barhouum7/bashphonebook" style="max-width:100%;"></a></p>
 
 This is a <ins>phone book using bash scripting</ins> that lets us perform simple phone book operations like our cell phones. It is a BASH script that can be used to <ins>add</ins>, <ins>view</ins>, <ins>edit</ins>, <ins>search</ins>, and <ins>remove</ins> phone directory related records.
 
